@@ -10,6 +10,11 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+
+    id("app.cash.sqldelight") version "2.1.0"
+
+    //Kotlin Serialization
+    kotlin("plugin.serialization") version "2.1.20"
 }
 
 kotlin {
@@ -79,23 +84,73 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+
+            implementation(libs.ktor.client.android)
+
+            implementation(libs.koin.android)
+
+            implementation(libs.android.driver)
         }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+
+            //Ktor
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.logging)
+
+            //Navigation
+            implementation(libs.navigation.compose)
+
+            //Coil
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
+
+            //Koin
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+
+            //Multiplatform settings
+            implementation(libs.multiplatform.settings)
+
+            //Kotlinx date time
+            implementation(libs.kotlinx.datetime)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+            implementation(libs.native.driver)
+        }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.java)
+            implementation(libs.sqlite.driver)
+
+        }
+
+        jsMain.dependencies {
+            implementation(libs.ktor.client.js)
+            implementation(npm("@cashapp/sqldelight-sqljs-worker", "2.1.0"))
+            implementation(npm("sql.js", "1.8.0"))
+            //noinspection UseTomlInstead
+            implementation("app.cash.sqldelight:web-worker-driver:2.1.0")
+            implementation(devNpm("copy-webpack-plugin", "9.1.0"))
         }
     }
 }
@@ -139,6 +194,16 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "org.andrew.recipeappcmp"
             packageVersion = "1.0.0"
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        //Name of the database inside the create block
+        create("RecipeAppCmpAppDb") {
+            packageName.set("org.andrew.recipeappcmp")
+            generateAsync = true
         }
     }
 }

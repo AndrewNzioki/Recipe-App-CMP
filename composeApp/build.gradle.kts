@@ -203,7 +203,7 @@ sqldelight {
         //Name of the database inside the create block
         create("RecipeAppCmpAppDb") {
             packageName.set("org.andrew.recipeappcmp")
-            generateAsync = true
+            generateAsync.set(true)
         }
     }
 }

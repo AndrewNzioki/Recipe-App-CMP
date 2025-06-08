@@ -9,4 +9,8 @@ class FeedLocalDataSourceImpl(
     override suspend fun getRecipesList(): List<RecipeItem>{
        return recipeDao.getAllRecipes()
     }
+
+    override suspend fun saveRecipesList(recipes: List<RecipeItem>) {
+        recipeDao.insertRecipeBulk(recipes)
+    }
 }

@@ -4,9 +4,13 @@ import org.andrew.recipeappcmp.features.feed.data.datasources.FeedLocalDataSourc
 import org.andrew.recipeappcmp.features.feed.data.datasources.FeedLocalDataSourceImpl
 import org.andrew.recipeappcmp.features.feed.data.datasources.FeedRemoteDataSource
 import org.andrew.recipeappcmp.features.feed.data.datasources.FeedRemoteDataSourceImpl
+import org.andrew.recipeappcmp.features.feed.data.repositories.FeedRepositoryImpl
+import org.andrew.recipeappcmp.features.feed.domain.repositories.FeedRepository
 import org.koin.dsl.module
 
 fun dataModule() = module {
     single<FeedLocalDataSource>{ FeedLocalDataSourceImpl(get()) }
     single<FeedRemoteDataSource> { FeedRemoteDataSourceImpl(get()) }
+    single<FeedRepository> { FeedRepositoryImpl(get(), get()) }
+
 }

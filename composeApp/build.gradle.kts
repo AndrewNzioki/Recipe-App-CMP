@@ -127,6 +127,8 @@ kotlin {
             //Kotlinx date time
             implementation(libs.kotlinx.datetime)
 
+            implementation(libs.primitive.adapters)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

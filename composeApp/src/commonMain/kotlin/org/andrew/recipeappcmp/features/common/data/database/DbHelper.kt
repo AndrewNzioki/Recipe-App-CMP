@@ -4,6 +4,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.andrew.recipeappcmp.RecipeAppCmpAppDb
 import org.andrew.recipeappcmp.dbFactory.DatabaseFactory
+import organdrewrecipeappcmp.Recipe
 
 /**
  * A helper class that manages access to the [RecipeAppCmpAppDb] database in a thread-safe way.
@@ -31,7 +32,7 @@ class DbHelper(
      * @param block A suspend function that receives the database instance and returns a result of type [Result].
      * @return The result of executing [block] with the initialized database.
      */
-    suspend fun <Result : Any> withDatabase(block: suspend (RecipeAppCmpAppDb) -> Result) = mutex.withLock {
+    suspend fun <Result : Any?> withDatabase(block: suspend (RecipeAppCmpAppDb) -> Result) = mutex.withLock {
         if (db == null) {
             db = createDb(driverFactory)
         }
@@ -46,6 +47,11 @@ class DbHelper(
      * @return A new [RecipeAppCmpAppDb] instance.
      */
     private suspend fun createDb(driverFactory: DatabaseFactory): RecipeAppCmpAppDb {
-        return RecipeAppCmpAppDb(driver = driverFactory.createDriver())
+        return RecipeAppCmpAppDb(
+            driver = driverFactory.createDriver(),
+            RecipeAdapter = Recipe.Adapter(
+            ingredientsAdapter = listOfStringsAdapter,
+            instructionsAdapter = listOfStringsAdapter
+        ))
     }
 }

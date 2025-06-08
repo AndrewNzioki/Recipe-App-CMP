@@ -34,6 +34,7 @@ import kotlinx.serialization.json.Json
  * ```
  */
 
+const val BASE_URL = "https://www.themealdb.com/api/json/v1/1/"
 
 val httpClient = HttpClient {
     install(ContentNegotiation){

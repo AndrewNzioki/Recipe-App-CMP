@@ -1,7 +1,12 @@
 package org.andrew.recipeappcmp.di
 
+import org.andrew.recipeappcmp.features.feed.data.datasources.FeedLocalDataSource
+import org.andrew.recipeappcmp.features.feed.data.datasources.FeedLocalDataSourceImpl
+import org.andrew.recipeappcmp.features.feed.data.datasources.FeedRemoteDataSource
+import org.andrew.recipeappcmp.features.feed.data.datasources.FeedRemoteDataSourceImpl
 import org.koin.dsl.module
 
 fun dataModule() = module {
-
+    single<FeedLocalDataSource>{ FeedLocalDataSourceImpl(get()) }
+    single<FeedRemoteDataSource> { FeedRemoteDataSourceImpl(get()) }
 }

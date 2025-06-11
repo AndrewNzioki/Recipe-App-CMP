@@ -11,11 +11,13 @@ class MainApplication: Application() {
     private val androidModules = module{
         single{ DatabaseFactory(applicationContext) }
     }
+
     override fun onCreate(){
         super.onCreate()
+        setupKoin()
     }
 
-    fun setupKoin(){
+    private fun setupKoin(){
         initKoin(
             additionalModules = listOf(androidModules)
         ){

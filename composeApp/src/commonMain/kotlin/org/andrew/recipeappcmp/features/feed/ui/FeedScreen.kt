@@ -336,7 +336,7 @@ private fun TopBar(
             .padding(16.dp)
     ){
         Text(
-            text = "Hi Mitchelle!",
+            text = "Hi Allan!",
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.titleMedium
         )

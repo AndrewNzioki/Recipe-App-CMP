@@ -91,7 +91,7 @@ fun RecipeApiItem.toRecipe(): RecipeItem? {
         RecipeItem(
             id = idMeal.toLong(),
             title = strMeal ?: "",
-            description = strInstructions ?: "",
+            description = strMeal ?: "",
             category = strCategory ?: "",
             area = strArea ?: "",
             imageUrl = strMealThumb ?: "",

@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
+import org.andrew.recipeappcmp.features.detail.navigation.navigateToDetail
 import org.andrew.recipeappcmp.features.tabs.navigation.navigateToTabs
 
 /**
@@ -53,4 +54,8 @@ class AppState(
      * Navigates to the Tabs screen using an extension function on [NavHostController].
      */
     fun navigateToTabs() = navController.navigateToTabs()
+
+    fun navigateToDetail(id: Long) = navController.navigateToDetail(id)
+
+    fun navigateBack() = navController.navigateUp()
 }

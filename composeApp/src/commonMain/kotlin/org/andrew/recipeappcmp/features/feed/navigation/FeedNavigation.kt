@@ -41,10 +41,12 @@ fun NavController.navigateToFeed(
  * ```
  */
 fun NavGraphBuilder.feedNavGraph(
+    navigateToDetail: (Long) -> Unit,
     navigateToSearch: () -> Unit
 ) {
     composable(Screen.Home.route) {
         FeedRoute(
+            navigateToDetail = navigateToDetail,
             navigateToSearch = navigateToSearch
         )
     }

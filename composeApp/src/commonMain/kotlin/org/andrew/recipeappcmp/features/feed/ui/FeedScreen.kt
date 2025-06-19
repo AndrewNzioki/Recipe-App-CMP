@@ -2,6 +2,7 @@ package org.andrew.recipeappcmp.features.feed.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,12 +53,14 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun FeedRoute(
+    navigateToDetail: (Long) -> Unit,
     navigateToSearch: () -> Unit,
     feedViewModel: FeedViewModel = koinViewModel()
 ){
     val feedUiState = feedViewModel.feedUiState.collectAsStateWithLifecycle()
 
     FeedScreen(
+        navigateToDetail = navigateToDetail,
         feedUiState = feedUiState.value,
         navigateToSearch = navigateToSearch
     )
@@ -66,6 +69,7 @@ fun FeedRoute(
 
 @Composable
 fun FeedScreen(
+    navigateToDetail: (Long) -> Unit,
     feedUiState: FeedUiState,
     navigateToSearch: () -> Unit
 ){
@@ -84,7 +88,10 @@ fun FeedScreen(
             }
 
             recipes != null -> {
-                FeedContent(innerPadding, recipes)
+                FeedContent(
+                    innerPadding = innerPadding,
+                    recipes = recipes,
+                    navigateToDetail = navigateToDetail)
             }
         }
 
@@ -122,6 +129,7 @@ private fun ErrorContent(errorMessage: String){
 
 @Composable
 private fun FeedContent(
+    navigateToDetail: (Long) -> Unit,
     innerPadding: PaddingValues,
     recipes: List<RecipeItem>
 ){
@@ -143,13 +151,15 @@ private fun FeedContent(
           ) {
              TopRecipesList(
                  title = "Top Recommendations",
-                 recipes = recipes.reversed()
+                 recipes = recipes.reversed(),
+                 navigateToDetail = navigateToDetail
              )
           }
 
             recipesOfTheWeek(
                 title = "Recipes Of the Week",
-                recipes = recipes
+                recipes = recipes,
+                navigateToDetail = navigateToDetail
             )
         }
 
@@ -159,6 +169,7 @@ private fun FeedContent(
 
 @Composable
 private fun TopRecipesList(
+    navigateToDetail: (Long) -> Unit,
     title: String,
     recipes: List<RecipeItem>
 ){
@@ -183,7 +194,9 @@ private fun TopRecipesList(
                 RecipeCard(
                     recipe = recipe,
                     modifier = Modifier.width(120.dp),
-                    imageModifier = imageModifier
+                    imageModifier = imageModifier.clickable{
+                        navigateToDetail(recipe.id)
+                    }
                 )
             }
         }
@@ -192,6 +205,7 @@ private fun TopRecipesList(
 
 
 private fun LazyGridScope.recipesOfTheWeek(
+    navigateToDetail: (Long) -> Unit,
     title: String,
     recipes: List<RecipeItem>
 ){
@@ -220,7 +234,9 @@ private fun LazyGridScope.recipesOfTheWeek(
             modifier = Modifier
                 .padding(start = cardPaddingStart, end = cardPaddingEnd)
             ,
-            imageModifier = imageModifier
+            imageModifier = imageModifier.clickable{
+                navigateToDetail(recipe.id)
+            }
         )
     }
 }

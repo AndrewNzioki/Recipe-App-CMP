@@ -4,6 +4,7 @@ import org.andrew.recipeappcmp.features.common.domain.entities.RecipeItem
 
 data class RecipeDetailUiState(
     val recipesDetail: RecipeItem? = null,
-    val recipesListIsLoading: Boolean = true,
-    val recipesListError: String? = null
+    val recipesDetailIsLoading: Boolean = true,
+    val recipesDetailError: String? = null
 )
+

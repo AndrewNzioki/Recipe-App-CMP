@@ -1,5 +1,6 @@
 package org.andrew.recipeappcmp.features.app.data
 
+import org.andrew.recipeappcmp.features.detail.navigation.RECIPE_ID_ARG
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import recipeapp_cmp.composeapp.generated.resources.Res
@@ -24,7 +25,7 @@ sealed class Screen(
 ) {
 
     data object Search : Screen("search", Res.string.search)
-    data object Detail : Screen("detail", Res.string.detail)
+    data object Detail : Screen("detail?$RECIPE_ID_ARG={$RECIPE_ID_ARG}", Res.string.detail)
     data object Tabs : Screen("tabs", Res.string.tabs)
     data object Home : Screen("home",
         Res.string.home,

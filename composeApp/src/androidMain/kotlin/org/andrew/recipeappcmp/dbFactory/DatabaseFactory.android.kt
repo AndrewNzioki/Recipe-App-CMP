@@ -1,6 +1,7 @@
 package org.andrew.recipeappcmp.dbFactory
 
 import android.content.Context
+import androidx.sqlite.db.SupportSQLiteDatabase
 import app.cash.sqldelight.async.coroutines.synchronous
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
@@ -29,8 +30,15 @@ actual class DatabaseFactory(
      * @return A [SqlDriver] instance for database access on Android.
      */
     actual suspend fun createDriver(): SqlDriver {
+
+        val schema = RecipeAppCmpAppDb.Schema.synchronous()
         return AndroidSqliteDriver(
-            RecipeAppCmpAppDb.Schema.synchronous(), context = context, DB_FILE_NAME
+            schema, context = context, DB_FILE_NAME,
+            callback = object : AndroidSqliteDriver.Callback(schema){
+                override fun onOpen(db: SupportSQLiteDatabase) {
+                    db.setForeignKeyConstraintsEnabled(true)
+                }
+            }
         )
     }
 }

@@ -6,6 +6,10 @@ import org.andrew.recipeappcmp.features.detail.data.datasource.RecipeDetailRemot
 import org.andrew.recipeappcmp.features.detail.data.datasource.RecipeDetailRemoteDataSourceImpl
 import org.andrew.recipeappcmp.features.detail.repositories.RecipeDetailRepository
 import org.andrew.recipeappcmp.features.detail.repositories.RecipeDetailRepositoryImpl
+import org.andrew.recipeappcmp.features.favorites.data.FavoriteRecipeLocalDataSource
+import org.andrew.recipeappcmp.features.favorites.data.FavoriteRecipeLocalDataSourceImpl
+import org.andrew.recipeappcmp.features.favorites.domain.FavoriteRecipeRepository
+import org.andrew.recipeappcmp.features.favorites.domain.FavoriteRecipeRepositoryImpl
 import org.andrew.recipeappcmp.features.feed.data.datasources.FeedLocalDataSource
 import org.andrew.recipeappcmp.features.feed.data.datasources.FeedLocalDataSourceImpl
 import org.andrew.recipeappcmp.features.feed.data.datasources.FeedRemoteDataSource
@@ -27,4 +31,7 @@ fun dataModule() = module {
 
     single<RecipeDetailRepository> { RecipeDetailRepositoryImpl(get(), get()) }
 
+    //Favorite feature
+    single<FavoriteRecipeLocalDataSource> { FavoriteRecipeLocalDataSourceImpl(get()) }
+    single<FavoriteRecipeRepository> { FavoriteRecipeRepositoryImpl(get()) }
 }

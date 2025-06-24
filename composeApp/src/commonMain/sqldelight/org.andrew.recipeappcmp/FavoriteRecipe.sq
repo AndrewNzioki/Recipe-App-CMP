@@ -13,13 +13,14 @@ insertFavorite:
 INSERT INTO FavoriteRecipe(recipe_id, added_at)
 VALUES (?,?);
 
-upsertFavorite:
+updateFavorite:
 UPDATE FavoriteRecipe
-  SET added_at = :added_at
-  WHERE recipe_id = :recipe_id;
+SET added_at = :added_at
+WHERE recipe_id = :recipe_id;
 
+insertFavoriteIgnore:
 INSERT OR IGNORE INTO FavoriteRecipe(recipe_id, added_at)
-VALUES (:recipe_id,:added_at);
+VALUES (:recipe_id, :added_at);
 
 selectAllFavoritesRecipeIds:
 SELECT id FROM FavoriteRecipe;

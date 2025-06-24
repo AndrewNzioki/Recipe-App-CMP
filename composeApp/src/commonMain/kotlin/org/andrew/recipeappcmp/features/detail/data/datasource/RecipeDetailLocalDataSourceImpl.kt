@@ -1,10 +1,12 @@
 package org.andrew.recipeappcmp.features.detail.data.datasource
 
+import org.andrew.recipeappcmp.features.common.data.database.daos.FavoriteRecipeDao
 import org.andrew.recipeappcmp.features.common.data.database.daos.RecipeDao
 import org.andrew.recipeappcmp.features.common.domain.entities.RecipeItem
 
 class RecipeDetailLocalDataSourceImpl(
-    private val recipeDao: RecipeDao
+    private val recipeDao: RecipeDao,
+    private val favoriteRecipeDao: FavoriteRecipeDao
 ): RecipeDetailLocalDataSource {
 
     override suspend fun getRecipeDetail(id: Long): RecipeItem?{
@@ -13,5 +15,17 @@ class RecipeDetailLocalDataSourceImpl(
 
     override suspend fun saveRecipe(recipe: RecipeItem) {
         recipeDao.insertRecipe(recipe)
+    }
+
+    override suspend fun addFavorite(recipeId: Long) {
+        favoriteRecipeDao.addFavorite(recipeId)
+    }
+
+    override suspend fun removeFavorite(recipeId: Long) {
+        favoriteRecipeDao.removeFavorite(recipeId)
+    }
+
+    override suspend fun isFavorite(recipeId: Long): Boolean {
+        return favoriteRecipeDao.isFavorite(recipeId)
     }
 }

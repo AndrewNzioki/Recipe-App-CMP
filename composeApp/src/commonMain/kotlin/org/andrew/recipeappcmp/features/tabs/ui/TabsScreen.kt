@@ -96,7 +96,9 @@ fun TabsScreen(
             feedNavGraph(
                 navigateToDetail = navigateToDetail
             ) {  }
-            favoritesNavGraph()
+            favoritesNavGraph(
+                navigateToDetail = navigateToDetail
+            )
             profileNavGraph()
         }
     }

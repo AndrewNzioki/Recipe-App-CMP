@@ -29,10 +29,15 @@ class FavoriteRecipeDao(
      * @param recipeItem The recipe item to be inserted.
      */
     suspend fun addFavorite(recipeId: Long) {
-
         val currentDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
         dbHelper.withDatabase { database ->
-            database.favoriteRecipeQueries.upsertFavorite(
+            database.favoriteRecipeQueries.updateFavorite(
+                recipe_id = recipeId,
+                added_at = currentDateTime.toString()
+            )
+
+            database.favoriteRecipeQueries.insertFavoriteIgnore(
                 recipe_id = recipeId,
                 added_at = currentDateTime.toString()
             )

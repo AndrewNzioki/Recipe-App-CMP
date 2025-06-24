@@ -12,7 +12,7 @@ fun viewModelModule() = module {
         FeedViewModel(get())
     }
     viewModel {
-        RecipeDetailViewModel(get())
+        RecipeDetailViewModel(get(), get())
     }
     viewModel {
         FavoriteScreenViewModel(get())

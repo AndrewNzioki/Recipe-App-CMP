@@ -23,7 +23,7 @@ fun dataModule() = module {
 
     single<FeedRemoteDataSource> { FeedRemoteDataSourceImpl(get()) }
 
-    single<RecipeDetailLocalDataSource> { RecipeDetailLocalDataSourceImpl(get()) }
+    single<RecipeDetailLocalDataSource> { RecipeDetailLocalDataSourceImpl(get(), get()) }
 
     single<RecipeDetailRemoteDataSource> { RecipeDetailRemoteDataSourceImpl(get()) }
 

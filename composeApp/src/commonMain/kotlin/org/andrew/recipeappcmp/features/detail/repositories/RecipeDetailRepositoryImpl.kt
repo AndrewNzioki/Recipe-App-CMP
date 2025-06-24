@@ -12,13 +12,14 @@ class RecipeDetailRepositoryImpl(
 
         return try {
             val recipeDetailCache = recipeDetailLocalDataSource.getRecipeDetail(id)
-            val count = recipeDetailCache
             if (recipeDetailCache != null) {
-                Result.success(recipeDetailCache)
+                val isFav = recipeDetailLocalDataSource.isFavorite(recipeId = id)
+                Result.success(recipeDetailCache.copy(
+                    isFavorite = isFav
+                ))
             } else {
                 val recipeDetailApiResponse = recipeDetailRemoteDataSource.getRecipeDetail(id)
                     ?: return Result.failure(Exception("Recipe Not Found!"))
-
                 recipeDetailLocalDataSource.saveRecipe(recipeDetailApiResponse)
                 Result.success(recipeDetailApiResponse)
             }
@@ -26,5 +27,13 @@ class RecipeDetailRepositoryImpl(
             Result.failure(e)
         }
 
+    }
+
+    override suspend fun addFavorite(recipeId: Long) {
+        recipeDetailLocalDataSource.addFavorite(recipeId)
+    }
+
+    override suspend fun removeFavorite(recipeId: Long) {
+        recipeDetailLocalDataSource.removeFavorite(recipeId)
     }
 }

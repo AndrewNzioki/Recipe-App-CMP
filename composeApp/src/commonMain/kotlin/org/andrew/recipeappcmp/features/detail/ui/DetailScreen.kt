@@ -51,7 +51,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DetailRoute(
-    recipeId: Long, onBackClick: () -> Unit, detailViewModel: RecipeDetailViewModel = koinViewModel()
+    recipeId: Long,
+    onBackClick: () -> Unit,
+    detailViewModel: RecipeDetailViewModel = koinViewModel()
 ) {
 
     LaunchedEffect(Unit) {
@@ -67,10 +69,19 @@ fun DetailRoute(
             uriHandler.openUri(link)
         }
     }
+
+    val onSaveClick: (RecipeItem) -> Unit = {
+        detailViewModel.updateIsFavorite(recipeId = it.id, isAdding = !it.isFavorite)
+    }
+
+    val updateIsFavoriteUiState = detailViewModel.updateIsFavoriteUiState.collectAsStateWithLifecycle()
+
     DetailScreen(
         uiState = detailUiState.value,
         onBackClick = onBackClick,
-        onWatchVideoClick = onWatchVideoClick
+        onWatchVideoClick = onWatchVideoClick,
+        onSaveClick = onSaveClick,
+        updateIsFavoriteUiState = updateIsFavoriteUiState.value
     )
 }
 
@@ -79,7 +90,9 @@ fun DetailRoute(
 fun DetailScreen(
     uiState: RecipeDetailUiState,
     onBackClick: () -> Unit,
-    onWatchVideoClick: (String) -> Unit
+    onWatchVideoClick: (String) -> Unit,
+    updateIsFavoriteUiState: RecipeDetailUpdateIsFavoriteUiState,
+    onSaveClick: (RecipeItem) -> Unit
 ) {
     Scaffold(
         modifier = Modifier
@@ -98,9 +111,10 @@ fun DetailScreen(
 
                 uiState.recipesDetail != null -> {
                     RecipeDetailContent(
-                        uiState.recipesDetail,
-                        onBackClick,
-                        onWatchVideoClick = onWatchVideoClick
+                        recipeItem = uiState.recipesDetail,
+                        onBackClick = onBackClick,
+                        onWatchVideoClick = onWatchVideoClick,
+                        onSaveClick = onSaveClick
                     )
                 }
             }
@@ -142,7 +156,8 @@ fun ErrorScreen(
 fun RecipeDetailContent(
     recipeItem: RecipeItem,
     onBackClick: () -> Unit,
-    onWatchVideoClick: (String) -> Unit
+    onWatchVideoClick: (String) -> Unit,
+    onSaveClick: (RecipeItem) -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -172,7 +187,7 @@ fun RecipeDetailContent(
             }
 
             IconButton(
-                onClick = { },
+                onClick = { onSaveClick(recipeItem) },
                 modifier = Modifier.padding(horizontal = 8.dp).size(30.dp)
                     .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f)),
             ) {

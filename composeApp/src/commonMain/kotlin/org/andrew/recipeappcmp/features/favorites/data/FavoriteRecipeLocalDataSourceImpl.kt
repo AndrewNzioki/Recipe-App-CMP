@@ -11,6 +11,7 @@ class FavoriteRecipeLocalDataSourceImpl(
     }
 
     override suspend fun addFavorite(recipeId: Long) {
+        print("Adding Favorite from data source")
         return favoriteRecipeDao.addFavorite(recipeId)
     }
 

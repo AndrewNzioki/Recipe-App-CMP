@@ -6,14 +6,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.andrew.recipeappcmp.features.detail.ui.RecipeDetailUpdateIsFavoriteUiState
 import org.andrew.recipeappcmp.features.favorites.domain.FavoriteRecipeRepository
 import org.andrew.recipeappcmp.features.feed.ui.FeedUiState
 
 class FavoriteScreenViewModel(
     private val favoriteRecipeRepository: FavoriteRecipeRepository
-): ViewModel() {
+) : ViewModel() {
     private var _favoriteScreenUiState = MutableStateFlow(FavoriteScreenUiState())
     val favoriteScreenUiState = _favoriteScreenUiState.asStateFlow()
+
+
 
     init {
         viewModelScope.launch {
@@ -22,14 +25,14 @@ class FavoriteScreenViewModel(
 
     }
 
-    private suspend fun getRecipesList(){
+    private suspend fun getRecipesList() {
         val recipesList = favoriteRecipeRepository.getAllFavoriteRecipes()
-        if (recipesList.isSuccess){
+        if (recipesList.isSuccess) {
             _favoriteScreenUiState.value = _favoriteScreenUiState.value.copy(
                 itemsList = recipesList.getOrDefault(emptyList()),
                 itemsListIsLoading = false
             )
-        }else {
+        } else {
             _favoriteScreenUiState.update {
                 it.copy(
                     itemsListError = recipesList.exceptionOrNull()?.message,
@@ -38,4 +41,6 @@ class FavoriteScreenViewModel(
             }
         }
     }
+
+
 }

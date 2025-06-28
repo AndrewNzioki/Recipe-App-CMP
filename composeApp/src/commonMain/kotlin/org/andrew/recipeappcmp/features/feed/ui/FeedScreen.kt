@@ -54,7 +54,7 @@ fun FeedScreen(
 ){
     val recipes = feedUiState.recipesList
     Scaffold(
-        topBar = {TopBar()}
+        topBar = {TopBar(navigateToSearch)}
     ) { innerPadding ->
 
         when{
@@ -295,7 +295,7 @@ private fun SearchBar(
 
 @Composable
 private fun TopBar(
-
+    navigateToSearch: () -> Unit,
 ){
     Column(
         modifier = Modifier
@@ -328,6 +328,9 @@ private fun TopBar(
                     shape = RoundedCornerShape(12.dp),
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f))
                 .padding(horizontal = 16.dp)
+                .clickable{
+                    navigateToSearch()
+                }
         )
     }
 }

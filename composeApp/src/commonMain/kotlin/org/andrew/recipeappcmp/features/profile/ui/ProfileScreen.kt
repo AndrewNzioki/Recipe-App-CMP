@@ -45,18 +45,24 @@ import recipeapp_cmp.composeapp.generated.resources.profile_dummy
 
 @Composable
 fun ProfileRoute(
-    profileViewModel: ProfileViewModel = koinViewModel()
+    profileViewModel: ProfileViewModel = koinViewModel(),
+    isUserLoggedIn: () -> Boolean,
+    openLoginBottomSheet: (() -> Unit) -> Unit,
+    onLogout: () -> Unit
 ) {
 
     val profileUiState = profileViewModel.profileUiState.collectAsStateWithLifecycle()
     ProfileScreen(
+        isUserLoggedIn = isUserLoggedIn,
         profileScreenUiState = profileUiState.value,
         onEditProfile = {},
         onLogin = {
-            profileViewModel.logIn()
+            openLoginBottomSheet{
+                profileViewModel.refresh()
+            }
         },
         onLogout = {
-            profileViewModel.logOut()
+            onLogout()
         }
     )
 }
@@ -65,7 +71,11 @@ fun ProfileRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    profileScreenUiState: ProfileScreenUiState, onEditProfile: () -> Unit, onLogin: () -> Unit, onLogout: () -> Unit
+    isUserLoggedIn: () -> Boolean,
+    profileScreenUiState: ProfileScreenUiState,
+    onEditProfile: () -> Unit,
+    onLogin: () -> Unit,
+    onLogout: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -88,6 +98,13 @@ fun ProfileScreen(
                 )
             )
             when {
+                !isUserLoggedIn() -> {
+                    NotLoggedInProfileScreen(
+                        onLogin = onLogin,
+                        onSignUp = {}
+                    )
+                }
+
                 profileScreenUiState.isLoading == true -> {
                     Loader()
                 }
@@ -96,14 +113,7 @@ fun ProfileScreen(
                     ErrorContent("Not able to load message")
                 }
 
-                !profileScreenUiState.isLoggedIn -> {
-                    NotLoggedInProfileScreen(
-                        onLogin = onLogin,
-                        onSignUp = {}
-                    )
-                }
-
-                profileScreenUiState.userInfo != null && profileScreenUiState.isLoading != true -> {
+                profileScreenUiState.userInfo != null && isUserLoggedIn() -> {
                     ProfileContent(
                         userInfo = profileScreenUiState.userInfo,
                         onEditProfile = onEditProfile,

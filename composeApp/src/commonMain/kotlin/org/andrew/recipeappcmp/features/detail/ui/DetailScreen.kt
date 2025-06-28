@@ -1,5 +1,6 @@
 package org.andrew.recipeappcmp.features.detail.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,16 +26,22 @@ import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +60,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun DetailRoute(
     recipeId: Long,
     onBackClick: () -> Unit,
+    isUserLoggedIn: () -> Boolean,
+    openLoginBottomSheet: (() -> Unit) -> Unit,
     detailViewModel: RecipeDetailViewModel = koinViewModel()
 ) {
 
@@ -70,11 +79,77 @@ fun DetailRoute(
         }
     }
 
+    var showAlertDialog by remember{
+        mutableStateOf(false
+        )
+    }
+
     val onSaveClick: (RecipeItem) -> Unit = {
-        detailViewModel.updateIsFavorite(recipeId = it.id, isAdding = !it.isFavorite)
+        if(!isUserLoggedIn()){
+            showAlertDialog = true
+        }else{
+            detailViewModel.updateIsFavorite(recipeId = it.id, isAdding = !it.isFavorite)
+        }
+
     }
 
     val updateIsFavoriteUiState = detailViewModel.updateIsFavoriteUiState.collectAsStateWithLifecycle()
+
+    if(showAlertDialog){
+        AlertDialog(
+            containerColor = MaterialTheme.colorScheme.background,
+            onDismissRequest = {
+                showAlertDialog = false
+            },
+            title = {
+                Text(
+                    text = "Update Favorite",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            },
+            text = {
+                Text(
+                    text = "Login to Add/Remove favorites",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors().copy(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ),
+                    onClick = {
+                        showAlertDialog = false
+                        openLoginBottomSheet{
+                            detailUiState.value.recipesDetail?.let {
+                                detailViewModel.updateIsFavorite(recipeId = it.id, isAdding = !it.isFavorite)
+                            }
+                        }
+                    }
+                ){
+                    Text("Login")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors().copy(
+                        containerColor = MaterialTheme.colorScheme.background
+                    ),
+                    onClick = {
+                        showAlertDialog = false
+                    }
+                ){
+                    Text(
+                        "Cancel",
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            }
+        )
+    }
 
     DetailScreen(
         uiState = detailUiState.value,

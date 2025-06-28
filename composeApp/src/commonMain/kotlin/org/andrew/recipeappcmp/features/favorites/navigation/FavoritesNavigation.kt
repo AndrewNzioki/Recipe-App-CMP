@@ -14,11 +14,14 @@ fun NavController.navigateToFavorites(
 }
 
 fun NavGraphBuilder.favoritesNavGraph(
-    navigateToDetail: (Long) -> Unit
+    navigateToDetail: (Long) -> Unit,
+    isUserLoggedIn: () -> Boolean,
+    openLoginBottomSheet: (() -> Unit) -> Unit,
 ) {
     composable(Screen.Favorites.route) {
         FavoritesRoute(
-            navigateToDetail = navigateToDetail
+            navigateToDetail = navigateToDetail,
+            isUserLoggedIn = isUserLoggedIn,
         )
     }
 }

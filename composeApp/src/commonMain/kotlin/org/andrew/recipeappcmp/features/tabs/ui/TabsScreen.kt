@@ -29,16 +29,28 @@ val tabItems = listOf(
 @Composable
 fun TabsRoute(
     tabNavController: NavHostController,
-    navigateToDetail: (Long) -> Unit
+    navigateToDetail: (Long) -> Unit,
+    isUserLoggedIn: () -> Boolean,
+    openLoginBottomSheet: (() -> Unit) -> Unit,
+    onLogout: () -> Unit
 ){
-    TabsScreen(tabNavController = tabNavController, navigateToDetail = navigateToDetail)
+    TabsScreen(
+        tabNavController = tabNavController,
+        navigateToDetail = navigateToDetail,
+        isUserLoggedIn = isUserLoggedIn,
+        openLoginBottomSheet = openLoginBottomSheet,
+        onLogout = onLogout
+    )
 }
 
 
 @Composable
 fun TabsScreen(
     tabNavController: NavHostController,
-    navigateToDetail: (Long) -> Unit
+    navigateToDetail: (Long) -> Unit,
+    isUserLoggedIn: () -> Boolean,
+    openLoginBottomSheet: (() -> Unit) -> Unit,
+    onLogout: () -> Unit
 ){
     
     Scaffold(
@@ -94,12 +106,21 @@ fun TabsScreen(
             Modifier.padding(innerPadding))
         {
             feedNavGraph(
-                navigateToDetail = navigateToDetail
-            ) {  }
+                navigateToDetail = navigateToDetail,
+                isUserLoggedIn = isUserLoggedIn,
+                openLoginBottomSheet = openLoginBottomSheet,
+            ){}
             favoritesNavGraph(
-                navigateToDetail = navigateToDetail
+                navigateToDetail = navigateToDetail,
+                isUserLoggedIn = isUserLoggedIn,
+                openLoginBottomSheet = openLoginBottomSheet,
+
             )
-            profileNavGraph()
+            profileNavGraph(
+                isUserLoggedIn = isUserLoggedIn,
+                openLoginBottomSheet = openLoginBottomSheet,
+                onLogout = onLogout
+            )
         }
     }
 }

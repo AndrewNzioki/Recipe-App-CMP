@@ -19,7 +19,9 @@ fun NavController.navigateToDetail(
 }
 
 fun NavGraphBuilder.detailNavGraph(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    isUserLoggedIn: () -> Boolean,
+    openLoginBottomSheet: (() -> Unit) -> Unit
 ) {
     composable(Screen.Detail.route,
         arguments = listOf(
@@ -29,6 +31,10 @@ fun NavGraphBuilder.detailNavGraph(
         )
     ) {
         val recipeId = it.arguments?.read { getLong(RECIPE_ID_ARG) } ?: 0
-        DetailRoute(recipeId, onBackClick)
+        DetailRoute(
+            recipeId = recipeId,
+            onBackClick = onBackClick,
+            isUserLoggedIn = isUserLoggedIn,
+            openLoginBottomSheet = openLoginBottomSheet)
     }
 }

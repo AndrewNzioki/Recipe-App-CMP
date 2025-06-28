@@ -6,8 +6,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import org.andrew.recipeappcmp.features.app.data.AppConstants.IS_LOGGED_IN
 import org.andrew.recipeappcmp.features.detail.navigation.navigateToDetail
 import org.andrew.recipeappcmp.features.tabs.navigation.navigateToTabs
+import org.andrew.recipeappcmp.preferences.AppPreferences
+import org.koin.compose.koinInject
 
 /**
  * Remembers and provides an instance of [AppState] that is tied to the given [navController]
@@ -21,7 +26,8 @@ import org.andrew.recipeappcmp.features.tabs.navigation.navigateToTabs
 @Composable
 fun rememberAppState(
     navController: NavHostController,
-    scope: CoroutineScope = rememberCoroutineScope()
+    scope: CoroutineScope = rememberCoroutineScope(),
+    appPreferences: AppPreferences
 ): AppState {
     return remember(
         navController,
@@ -29,7 +35,8 @@ fun rememberAppState(
     ) {
         AppState(
             navController,
-            scope
+            scope,
+            appPreferences = appPreferences
         )
     }
 }
@@ -48,8 +55,12 @@ fun rememberAppState(
 @Stable
 class AppState(
     val navController: NavHostController,
-    scope: CoroutineScope
+    scope: CoroutineScope,
+    private val appPreferences: AppPreferences
 ) {
+
+    private var _isLoggedIn = MutableStateFlow(appPreferences.getBoolean(IS_LOGGED_IN, false))
+    val isLoggedIn = _isLoggedIn.asStateFlow()
     /**
      * Navigates to the Tabs screen using an extension function on [NavHostController].
      */
@@ -58,4 +69,15 @@ class AppState(
     fun navigateToDetail(id: Long) = navController.navigateToDetail(id)
 
     fun navigateBack() = navController.navigateUp()
+
+    fun updateIsLoggedIn(
+        isLoggedIn: Boolean
+    ){
+        this._isLoggedIn.value = isLoggedIn
+        appPreferences.putBoolean(IS_LOGGED_IN, isLoggedIn)
+    }
+
+    fun onLogout(){
+        updateIsLoggedIn(false)
+    }
 }

@@ -16,6 +16,8 @@ import org.andrew.recipeappcmp.features.feed.data.datasources.FeedRemoteDataSour
 import org.andrew.recipeappcmp.features.feed.data.datasources.FeedRemoteDataSourceImpl
 import org.andrew.recipeappcmp.features.feed.data.repositories.FeedRepositoryImpl
 import org.andrew.recipeappcmp.features.feed.domain.repositories.FeedRepository
+import org.andrew.recipeappcmp.preferences.AppPreferences
+import org.andrew.recipeappcmp.preferences.AppPreferencesImpl
 import org.koin.dsl.module
 
 fun dataModule() = module {
@@ -34,4 +36,7 @@ fun dataModule() = module {
     //Favorite feature
     single<FavoriteRecipeLocalDataSource> { FavoriteRecipeLocalDataSourceImpl(get()) }
     single<FavoriteRecipeRepository> { FavoriteRecipeRepositoryImpl(get()) }
+
+    //AppPreference
+    single<AppPreferences>{ AppPreferencesImpl(get()) }
 }

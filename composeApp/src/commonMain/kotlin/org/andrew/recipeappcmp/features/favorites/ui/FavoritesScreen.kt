@@ -28,7 +28,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun FavoritesRoute(
     favoritesScreenViewModel: FavoriteScreenViewModel = koinViewModel(),
-    navigateToDetail: (Long) -> Unit
+    navigateToDetail: (Long) -> Unit,
+    isUserLoggedIn: () -> Boolean,
 ){
 
     val uiState = favoritesScreenViewModel.favoriteScreenUiState.collectAsStateWithLifecycle()
@@ -36,7 +37,7 @@ fun FavoritesRoute(
 
     FavoritesScreen(
         uiState = uiState.value,
-        navigateToDetail = navigateToDetail
+        navigateToDetail = navigateToDetail,
     )
 }
 
@@ -45,7 +46,7 @@ fun FavoritesRoute(
 @Composable
 fun FavoritesScreen(
     uiState: FavoriteScreenUiState,
-    navigateToDetail: (Long) -> Unit
+    navigateToDetail: (Long) -> Unit,
 ){
     val recipes = uiState.itemsList
     Scaffold(

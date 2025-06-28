@@ -14,8 +14,11 @@ import org.andrew.recipeappcmp.features.tabs.navigation.tabsNavGraph
 fun AppNavHost(
     modifier: Modifier = Modifier,
     appState: AppState,
-    startDestination: String = Screen.Tabs.route
-){
+    startDestination: String = Screen.Tabs.route,
+    isUserLoggedIn: () -> Boolean,
+    openLoginBottomSheet: (() -> Unit) -> Unit,
+    onLogout: () -> Unit
+) {
 
     val navController = appState.navController
 
@@ -24,17 +27,24 @@ fun AppNavHost(
     NavHost(
         navController,
         startDestination = startDestination
-    ){
+    ) {
         tabsNavGraph(
             tabNavController = tabNavController,
             navigateToDetail = {
                 appState.navigateToDetail(it)
-            }
+            },
+            isUserLoggedIn = isUserLoggedIn,
+            openLoginBottomSheet = openLoginBottomSheet,
+            onLogout = onLogout
         )
 
         searchNavGraph()
 
-        detailNavGraph(onBackClick = appState::navigateBack)
+        detailNavGraph(
+            onBackClick = appState::navigateBack,
+            isUserLoggedIn = isUserLoggedIn,
+            openLoginBottomSheet = openLoginBottomSheet,
+        )
     }
 
 }
